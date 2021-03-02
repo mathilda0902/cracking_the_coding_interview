@@ -184,5 +184,75 @@ s = 'aabcccccaa'
 s = 'aabbccc'
 s = 'a'
 s = 'abbbbbbbbbbbb'
-print(f"compress string {s} to {str_compr(s)}")
+# print(f"compress string {s} to {str_compr(s)}")
 
+
+# rotate matrix N*N by 90 degrees clockwise
+def rotate(matrix: [[int]]) -> None:
+    """
+    Do not return anything, modify matrix in-place instead.
+    """
+    n = len(matrix)
+    layer = 0
+    while layer < n/2:
+        first = layer
+        last = n - layer - 1
+        for i in range(first, last):
+            offset = i - first
+            tmp = matrix[first][i]
+            matrix[first][i] = matrix[last - offset][first]
+            matrix[last - offset][first] = matrix[last][last - offset]
+            matrix[last][last - offset] = matrix[i][last]
+            matrix[i][last] = tmp
+        layer += 1
+    return matrix
+
+matrix = [[5,1,9,11],[2,4,8,10],[13,3,6,7],[15,14,12,16]]
+# print(f"rotate matrix {matrix} 90 degrees clockwise to {rotate(matrix)}")
+
+
+# zero matrix: in matrix M*N, if an element is 0, set entire column and row to 0
+def setZeroes(matrix: [[int]]) -> None:
+    """
+    Do not return anything, modify matrix in-place instead.
+    """
+    m = len(matrix)
+    n = len(matrix[0])
+    pos = []
+    for j in range(m):
+        for i in range(n):
+            if matrix[j][i] == 0:
+                pos.append((j, i))
+
+    for element in pos:
+        index1 = element[0]
+        index2 = element[1]
+        for j in range(n):
+            matrix[index1][j] = 0
+        for i in range(m):
+            matrix[i][index2] = 0
+    
+    return matrix
+
+matrix = [[0,1,2,0],[3,4,5,2],[1,3,1,5]]
+# print(f"set zero for matrix {matrix} to {setZeroes(matrix)}")
+
+# string rotation:
+# We are given two strings, A and B.
+# A shift on A consists of taking string A and moving the leftmost character to the rightmost position. 
+# For example, if A = 'abcde', then it will be 'bcdea' after one shift on A. Return True if and only if A can become B after some number of shifts on A.
+def rotateString(A: str, B: str) -> bool:
+    res = 0
+    for i in range(len(A)):
+        if B == A[i:] + A[:i]:
+            res += 1
+    
+    return bool(res)
+
+def rotateString2(A: str, B: str) -> bool:
+    return len(A) == len(B) and B in A+A
+
+A = 'abcde'
+B = 'bcdea'
+print(rotateString(A, B))
+print(rotateString2(A, B))
