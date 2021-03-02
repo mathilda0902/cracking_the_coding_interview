@@ -3,23 +3,44 @@ class Node:
         self.data = data
         self.next = None
     
-
 class LinkedList:
-    def __init__(self):
+    def __init__(self, nodes=None):
         self.head = None
+        if nodes:
+            node = Node(nodes.pop(0))
+            self.head = node
+            for elem in nodes:
+                node.next = Node(elem)
+                node = node.next
+    
+    def __iter__(self):
+        node = self.head
+        while node:
+            yield node
+            node = node.next
+    
+    def remove_dups(self, head):
+        if self.head is None or self.head.next is None:
+            return self.head
+        
+        current = self.head
+        hash = set()
+        hash.add(current.data)
 
-    def display(self):
-        tmp = self.head
-        while tmp:
-            print(tmp.data)
-            tmp = tmp.next
+        while current.next:
+            if current.next.data in hash:
+                current.next = current.next.next
+            else:
+                hash.add(current.next.data)
+                current = current.next
+        
+        return head
+
 
 if __name__ == '__main__':
-    llist = LinkedList()
-    llist.head = Node(1)
-    second = Node(2)
-    third = Node(3)
-    llist.head.next = second
-    second.next = third
+    llist = LinkedList(nodes=[0,1,2,3,2,3,3,3,5])
 
-    llist.display()
+    llist.remove_dups(llist.head)
+    for node in llist:
+        print(node.data)
+
